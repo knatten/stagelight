@@ -43,23 +43,23 @@ int noteToPin(uint8_t note) {
   if (note == NOTE_C1)
     return NAME_A0;
   if (note == NOTE_CS1)
-    return NAME_A1;
+    return NAME_8;
   if (note == NOTE_D1)
-    return NAME_A2;
+    return NAME_A3;
 
   if (note == NOTE_E1)
-    return NAME_A3;
+    return NAME_A1;
   if (note == NOTE_F1)
-    return NAME_4;
+    return NAME_9;
   if (note == NOTE_FS1)
-    return NAME_6;
+    return NAME_4;
 
   if (note == NOTE_GS1)
-    return NAME_8;
+    return NAME_A2;
   if (note == NOTE_A1)
-    return NAME_9;
-  if (note == NOTE_AS1)
     return NAME_10;
+  if (note == NOTE_AS1)
+    return NAME_6;
 
   return -1;
 }
@@ -79,6 +79,8 @@ void noteOff(uint8_t note) {
 }
 
 void loop() {
+  /* Serial.println(); */
+  /* Serial.println("loop"); */
   midiEventPacket_t rx = MidiUSB.read();
   if (rx.header != 0) {
     if (rx.header == 0x09) {
