@@ -24,6 +24,25 @@ const uint8_t NOTE_A1 = 0x2D;
 const uint8_t NOTE_AS1 = 0x2E;
 const uint8_t NOTE_B1 = 0x2F;
 
+void printName(char* name, uint8_t value) {
+  Serial.print("Pin ");
+  Serial.print(name);
+  Serial.print(": ");
+  Serial.print(value, HEX);
+  Serial.println();
+}
+void printNames() {
+  printName("NAME_A0", NAME_A0);
+  printName("NAME_A1", NAME_A1);
+  printName("NAME_A1", NAME_A2);
+  printName("NAME_A2", NAME_A3);
+  printName("NAME_4", NAME_4);
+  printName("NAME_6", NAME_6);
+  printName("NAME_8", NAME_8);
+  printName("NAME_9", NAME_9);
+  printName("NAME_10", NAME_10);
+}
+
 void setup() {
   pinMode(NAME_A0, OUTPUT);
   pinMode(NAME_A1, OUTPUT);
@@ -34,12 +53,11 @@ void setup() {
   pinMode(NAME_8, OUTPUT);
   pinMode(NAME_9, OUTPUT);
   pinMode(NAME_10, OUTPUT);
+  printNames();
 }
 
 int noteToPin(uint8_t note) {
-  Serial.println();
-  Serial.print("note : ");
-  Serial.print(note, HEX);
+
   if (note == NOTE_C1)
     return NAME_A0;
   if (note == NOTE_CS1)
@@ -66,6 +84,12 @@ int noteToPin(uint8_t note) {
 
 void noteOn(uint8_t note) {
   int pin = noteToPin(note);
+  Serial.print("note : ");
+  Serial.print(note, HEX);
+  Serial.print(", pin : ");
+  Serial.print(pin, HEX);
+  Serial.println();
+
   if (pin != -1) {
     digitalWrite(pin, HIGH);
   }
@@ -84,7 +108,11 @@ void loop() {
   midiEventPacket_t rx = MidiUSB.read();
   if (rx.header != 0) {
     if (rx.header == 0x09) {
-      noteOn(rx.byte2);
+      if (rx.byte2 == 0x30) {
+        printNames();
+      } else {
+        noteOn(rx.byte2);
+      }
     }
     if (rx.header == 0x08) {
       noteOff(rx.byte2);
